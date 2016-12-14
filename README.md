@@ -33,6 +33,7 @@ Para criar um documento do zero, e deixar que o ElasticSearch gerencie o indice 
 
 ```
 POST /produtos/geladeiras
+
 {
     "produto" : "Geladeira Consul Frost Free 500xx",
     "cores" : ["branca", "cinza", "preta"],
@@ -60,7 +61,24 @@ POST /produtos/geladeiras
 
 ```
 
+### Ajustando o numero de replicas do index para 0
 
+* REQUEST
+```
+PUT /produtos/_settings
+{
+    "index" : {
+        "number_of_replicas" : 0
+    }
+}
+```
+
+* RESPONSE
+```
+{
+    "acknowledged": true
+}
+```
 
 
 ### Pegando a quantidade total de itens do indice por tipo
@@ -122,14 +140,99 @@ GET /produtos/geladeiras/AVj7M-ZgBQRwiJ3RYe1N
 
 ### Retornando todos os registros do indice sem filtro com o parametro _search
 
+* REQUEST
 ```
 GET /produtos/geladeiras/_search
 {}
 ```
 
+* RESPONSE
+```
+{
+    "took": 42,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+    },
+    "hits": {
+        "total": 2,
+        "max_score": 1,
+        "hits": [
+            {
+                "_index": "produtos",
+                "_type": "geladeiras",
+                "_id": "AVj7My6qBQRwiJ3RYe1M",
+                "_score": 1,
+                "_source": {
+                    "user": "kimchy",
+                    "post_date": "2009-11-15T14:12:12",
+                    "message": "trying out Elasticsearch"
+                }
+            },
+            {
+                "_index": "produtos",
+                "_type": "geladeiras",
+                "_id": "AVj7M-ZgBQRwiJ3RYe1N",
+                "_score": 1,
+                "_source": {
+                    "produto": "Geladeira Consul Frost Free 500xx",
+                    "cores": [
+                        "branca",
+                        "cinza",
+                        "preta"
+                    ],
+                    "marca": "Consul",
+                    "valor": 930,
+                    "estado": "nova"
+                }
+            }
+        ]
+    }
+}
+```
+
 ### Retornando todos os registros do indice com filtro
 
+* REQUEST
+
 ```
-GET /produtos/geladeiras/_search?q=consul
+GET /produtos/geladeiras/_search?q=ponto
 {}
+```
+
+* RESPONSE
+
+```
+{
+    "took": 94,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+    },
+    "hits": {
+        "total": 1,
+        "max_score": 0.11506981,
+        "hits": [
+            {
+                "_index": "produtos",
+                "_type": "geladeiras",
+                "_id": "AVj7OgJVBQRwiJ3RYe1Y",
+                "_score": 0.11506981,
+                "_source": {
+                    "produto": "Geladeira Ponto Frio",
+                    "cores": [
+                        "branca"
+                    ],
+                    "marca": "Consul",
+                    "valor": 1000,
+                    "estado": "nova"
+                }
+            }
+        ]
+    }
+}
 ```
