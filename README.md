@@ -67,6 +67,15 @@ POST /produtos/geladeiras
 
 ```
 
+### Substituindo um documento com PUT
+Podemos utilizar o método PUT para sobrescrever um documento com novas propriedades, para isso somos obrigados a fornecer o /indice/tipo/identificador na URL e um JSON com os novos valores na BODY do request.
+
+* REQUEST
+
+```
+
+```
+
 ### Ajustando o numero de replicas do index para 0
 
 * REQUEST
@@ -86,6 +95,38 @@ PUT /produtos/_settings
 }
 ```
 
+### Atualizando somente alguns campos do documento
+
+Podemos atualizar somente alguns campos do documento utilizando o método POST.
+Precisamos fornecer no request um parâmetro "doc" obrigatoriamente
+
+* REQUEST
+
+```
+POST /produtos/geladeiras/AVj7M-ZgBQRwiJ3RYe1N/_update
+
+{
+  "doc": {
+    "valor": 666.66
+  }
+}
+```
+
+* RESPONSE
+
+```
+{
+  "_index": "produtos",
+  "_type": "geladeiras",
+  "_id": "AVj7M-ZgBQRwiJ3RYe1N",
+  "_version": 2,
+  "_shards": {
+      "total": 1,
+      "successful": 1,
+      "failed": 0
+  }
+}
+```
 
 ### Pegando a quantidade total de itens do indice por tipo
 
@@ -199,7 +240,26 @@ GET /produtos/geladeiras/_search
 }
 ```
 
+### Parâmetros de limite e paginação no _search
+
+Para definir o numero máximo de registros retornados da busca, utilizamos o parâmetro 'size'. Esse parametro é importante, porque por default, o Elasticsearch retorna somente 10 documentos na consulta.
+
+```
+GET /produtos/geladeiras/_search?size=50
+{}
+```
+
+Para inserir uma paginação, ou seja, a partir de um numero de itens, para criar uma paginação e etc, utilizamos o parâmetro from
+
+```
+GET /produtos/geladeiras/_search?size=50&from=10
+{}
+```
+
 ### Retornando todos os registros do indice com filtro
+
+Quando não oferecemos parametros de campo para o _search,ele automaticamente concatena todos os itens dos indices em um campo chamado _all, logo quando montamos uma busca com
+_search?q=consul é o mesmo que fazer _search?q=_all:consul
 
 * REQUEST
 
@@ -228,6 +288,69 @@ GET /produtos/geladeiras/_search?q=ponto
                 "_type": "geladeiras",
                 "_id": "AVj7OgJVBQRwiJ3RYe1Y",
                 "_score": 0.11506981,
+                "_source": {
+                    "produto": "Geladeira Ponto Frio",
+                    "cores": [
+                        "branca"
+                    ],
+                    "marca": "Consul",
+                    "valor": 1000,
+                    "estado": "nova"
+                }
+            }
+        ]
+    }
+}
+```
+
+### Adicionando parametros na busca
+
+Para fornecer um campo específico para a busca, devemos utilizar o parametro _search também, porém _search?q=marca:consul.
+Para adicionar mais parâmetros, seguimos o padrão de query http _search?q=marca:consul&cores:branca
+
+* REQUEST
+
+```
+GET /produtos/geladeiras/_search?q=marca:consul
+```
+
+* RESPONSE
+
+```
+{
+    "took": 29,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+    },
+    "hits": {
+        "total": 2,
+        "max_score": 0.30685282,
+        "hits": [
+            {
+                "_index": "produtos",
+                "_type": "geladeiras",
+                "_id": "AVj7M-ZgBQRwiJ3RYe1N",
+                "_score": 0.30685282,
+                "_source": {
+                    "produto": "Geladeira Consul Frost Free 500xx",
+                    "cores": [
+                        "branca",
+                        "cinza",
+                        "preta"
+                    ],
+                    "marca": "Consul",
+                    "valor": 666.66,
+                    "estado": "nova"
+                }
+            },
+            {
+                "_index": "produtos",
+                "_type": "geladeiras",
+                "_id": "AVj7OgJVBQRwiJ3RYe1Y",
+                "_score": 0.30685282,
                 "_source": {
                     "produto": "Geladeira Ponto Frio",
                     "cores": [
