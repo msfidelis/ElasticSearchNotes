@@ -365,3 +365,19 @@ GET /produtos/geladeiras/_search?q=marca:consul
     }
 }
 ```
+
+
+### Bulk API
+
+Para inserir diversos registros de uma vez na API utilizando a API do Bulk editor.
+
+
+```
+POST /indice/tipo/_bulk
+{"create": {}}
+{"campo1": "valor1", "campo_n": "valor_n"}
+{"create": {}} (4)
+{"campo1": "valor2", "campo_n": "valor_n2"}
+
+...
+```
