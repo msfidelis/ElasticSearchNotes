@@ -1,6 +1,12 @@
+
 # Notas da aula de ElasticSearch
 
+![ElasticSearch](https://avatars0.githubusercontent.com/u/6764390?v=3&s=400)
+
 ## Subindo o ambiente
+
+![Docker](https://d3nmt5vlzunoa1.cloudfront.net/phpstorm/files/2015/10/large_v-trans.png)
+
 * Tenha o Docker instalado
 * Tenha o Docker Compose instalado
 * Tenha um espaço em ram considerável, o ElasticSearch é tipo um Google Chrome Sênior no que diz respeito ao consumo de memória.
@@ -16,8 +22,8 @@
 
 Para utilizar o treinamento é necessário utilizar um client HTTP. O browser por si só é um client legal, porém ele é limitado nativamente por requisições POST e GET, e utilizaremos vários outros métodos REST. Para isso indico os seguintes clients
 
-* POSTman (Chrome Plugin)
-* REST Client (Atom)
+* [Postman (Chrome Plugin)](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop)
+* [REST Client (Atom)](https://atom.io/packages/rest-client)
 
 
 
@@ -114,7 +120,7 @@ GET /produtos/geladeiras/AVj7M-ZgBQRwiJ3RYe1N
 {}
 ```
 
-*Response
+* RESPONSEs
 
 ```
 {
